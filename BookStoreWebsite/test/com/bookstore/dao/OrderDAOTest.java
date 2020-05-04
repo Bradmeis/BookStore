@@ -184,6 +184,14 @@ public class OrderDAOTest {
 		
 		assertNotNull(order);
 	}
+	
+	@Test
+	public void testListRecentSales() {
+		List<BookOrder> recentSales = orderDAO.listMostRecentSales();
+		
+		assertEquals(3, recentSales.size());
+	}
+	
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		orderDAO.close();

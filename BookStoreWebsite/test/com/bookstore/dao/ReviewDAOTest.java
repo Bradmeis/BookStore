@@ -76,7 +76,7 @@ public class ReviewDAOTest {
 		
 		for(Review review: listAll) {
 			System.out.println(review.getReviewId() + " - " + review.getBook().getTitle()+
-					" Reviewed by: " + review.getCustomer().getFullname());
+					" Reviewed by: " + review.getCustomer().getFirstname());
 		}
 	}
 	
@@ -131,5 +131,12 @@ public class ReviewDAOTest {
 		Review result = reviewDAO.findByCustomerAndBook(customerId, bookId);
 		
 		assertNotNull(result);
+	}
+	
+	@Test
+	public void testListMostRecent() {
+		List<Review> recentReviews = reviewDAO.listMosteRecent();
+		
+		assertEquals(3, recentReviews.size());
 	}
 }

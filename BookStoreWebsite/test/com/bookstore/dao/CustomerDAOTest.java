@@ -2,7 +2,13 @@ package com.bookstore.dao;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.servlet.ServletException;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -24,11 +30,13 @@ public class CustomerDAOTest {
 		
 		customer.setEmail("lucky@yahoo.com");
 		
-		customer.setFullname("Lucky Phaswana");
+		customer.setFirstname("Lucky");
+		customer.setLastname("Phaswana");
 		customer.setCity("Johannesburg");
+		customer.setProvince("Gauteng");
 		customer.setCountry("South Africa");
-		customer.setAddress("124 Carr Gardens");
-		
+		customer.setAddressLine1("124 Carr Gardens");
+		customer.setAddressLine2("1 High Road");
 		
 		customer.setPassword("secret");
 		customer.setPhone("0608032139");
@@ -42,7 +50,7 @@ public class CustomerDAOTest {
 	
 	@Test
 	public void testGetCustomer() {
-		int customerId = 4;
+		int customerId = 27;
 		
 		Customer customer = customerDAO.get(customerId);
 		
@@ -53,12 +61,12 @@ public class CustomerDAOTest {
 	public void testUpdateCustomer() {
 		Customer customer = customerDAO.get(8);
 		String fullName = "BRAD BRAD BAD";
-		String password = "secret";
-		customer.setFullname("BRAD BRAD BAD");
+		String password = "Secret";
+		customer.setFirstname("BRAD BRAD BAD");
 		Customer updated = customerDAO.update(customer);
 		
 		
-		assertTrue(updated.getFullname().equals(fullName));
+		assertTrue(updated.getFirstname().equals(fullName));
 	}
 
 	@Test
@@ -69,7 +77,7 @@ public class CustomerDAOTest {
 		
 		for(Customer aCustomer: listCustomers)
 		{
-			System.out.println("Customer name: " + aCustomer.getFullname());
+			System.out.println("Customer name: " + aCustomer.getFirstname());
 		}
 		
 	}
@@ -77,7 +85,7 @@ public class CustomerDAOTest {
 	@Test
 	public void testDeleteCustomer() {
 		int customerId = 4;
-		customerDAO.delete(4);
+		customerDAO.delete(customerId);
 		Customer customer = customerDAO.get(4);
 		assertTrue(customer == null);
 	}
@@ -86,7 +94,7 @@ public class CustomerDAOTest {
 	public void testCount() {
 		long tottalCustomers = customerDAO.count();
 		
-		assertEquals(2, tottalCustomers);
+		assertEquals(4, tottalCustomers);
 	}
 	
 	@Test
@@ -107,6 +115,29 @@ public class CustomerDAOTest {
 		
 		assertNotNull(customer);
 	}
+	
+	@Test
+	public void testNewCustomer() {
+		String[] countryCodes = Locale.getISOCountries();
+		
+		Map<String, String> mapCountries = new HashMap<>();
+		
+		
+		for(String countryCode: countryCodes) {
+			Locale locale = new Locale("", countryCode);
+			String code = locale.getCountry();	 
+			String name = locale.getDisplayCountry();
+			
+			mapCountries.put(code, name);
+		}
+		
+		assertTrue(mapCountries.size()>0);
+		
+		System.out.println(mapCountries);
+		
+		
+	}
+	
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		customerDAO.close();

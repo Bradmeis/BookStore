@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+ <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+            "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta charset="ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<style>
      <%@ include file="../css/style.css"%>
 	</style>
@@ -50,8 +52,13 @@
 			</tr>
 			
 			<tr>
-				<td align="right">Full Name:</td>
-				<td><input type="text" id="fullName" name="fullName" size="45" value="${customer.fullname}" /></td>
+				<td align="right">First Name:</td>
+				<td><input type="text" id="firstName" name="firstName" size="45" value="${customer.firstname}" /></td>
+			</tr>
+			
+			<tr>
+				<td align="right">Last Name:</td>
+				<td><input type="text" id="lastName" name="lastName" size="45" value="${customer.lastname}" /></td>
 			</tr>
 			
 			<tr>
@@ -70,13 +77,23 @@
 			</tr>
 			
 			<tr>
-				<td align="right">Address:</td>
-				<td><input type="text" id="address" name="address" size="45" value="${customer.address}" /></td>
+				<td align="right">Address Line1:</td>
+				<td><input type="text" id="addressLine1" name="addressLine1" size="45" value="${customer.addressLine1}" /></td>
+			</tr>
+			
+			<tr>
+				<td align="right">Address Line2:</td>
+				<td><input type="text" id="addressLine2" name="addressLine2" size="45" value="${customer.addressLine2}" /></td>
 			</tr>
 			
 			<tr>
 				<td align="right">City:</td>
 				<td><input type="text" id="city"  name="city" size="45" value="${customer.city}" /></td>
+			</tr>
+			
+			<tr>
+				<td align="right">Province:</td>
+				<td><input type="text" id="province"  name="province" size="45" value="${customer.province}" /></td>
 			</tr>
 			
 			<tr>
@@ -86,7 +103,13 @@
 			
 			<tr>
 				<td align="right">Country:</td>
-				<td><input type="text" id="country" name="country" size="45" value="${customer.country}" /></td>
+				<td align="left">
+				<select name="country" id="country">
+						<c:forEach items="${mapCountries}" var="country">
+							<option value="${country.value}">${country.key}</option>
+						</c:forEach>
+				</select>
+				</td>
 			</tr>
 			
 			<tr><td>&nbsp;</td></tr>
@@ -109,7 +132,8 @@
 		$("#customerForm").validate({
 			rules: {
 				email: "required",
-				fullName: "required",
+				firstName: "required",
+				lastName: "required",
 				password: "required",
 				
 				confirmPassword: {
@@ -119,8 +143,10 @@
 				} ,
 		
 				phoneNumber: "required",
-				address: "required",
+				addressLine1: "required",
+				addressLine2: "required",
 				city: "required",
+				province: "required",
 				country: "required",
 				zipCode: "required",
 			},

@@ -1,7 +1,11 @@
 package com.bookstore.service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -113,11 +117,11 @@ public class CustomerServices {
 	public void deleteCustomer() throws ServletException, IOException {
 		Integer customerId = Integer.parseInt(request.getParameter("id"));
 		Customer customer = customerDAO.get(customerId);
-		
+
 		if (customer != null) {
 			ReviewDAO reviewDAO = new ReviewDAO();
 			long reviewCount = reviewDAO.countByCustomer(customerId);
-			
+
 			if (reviewCount > 0) {
 				String message = "Could not delete customer with ID " + customerId
 						+ " because he/she posted reviews for books.";
@@ -125,13 +129,13 @@ public class CustomerServices {
 			} else {
 				OrderDAO orderDAO = new OrderDAO();
 				long orderCount = orderDAO.countByCustomer(customerId);
-				
+
 				if (orderCount > 0) {
-					String message = "Could not delete customer with ID " + customerId 
+					String message = "Could not delete customer with ID " + customerId
 							+ " because he/she placed orders.";
 					listCustomers(message);
 				} else {
-					customerDAO.delete(customerId);			
+					customerDAO.delete(customerId);
 					String message = "The customer has been deleted successfully.";
 					listCustomers(message);
 				}
@@ -180,7 +184,7 @@ public class CustomerServices {
 			customer.setEmail(email);
 		}
 
-		customer.setFullname(fullName);
+		customer.setFirstname(fullName);
 
 		if (password != null & !password.isEmpty()) {
 			String encryptedPassword = HashGenerator.generateMD5(password);
@@ -188,7 +192,7 @@ public class CustomerServices {
 		}
 
 		customer.setPhone(phone);
-		customer.setAddress(address);
+		customer.setAddressLine1(address);
 		customer.setCity(city);
 		customer.setZipcode(zipCode);
 		customer.setCountry(country);
@@ -215,19 +219,18 @@ public class CustomerServices {
 		} else {
 			HttpSession session = request.getSession();
 			session.setAttribute("loggedCustomer", customer);
-			
+
 			Object objRedirectURL = session.getAttribute("redirectURL");
-			
-			if(objRedirectURL != null) {
+
+			if (objRedirectURL != null) {
 				String redirectURL = (String) objRedirectURL;
 				session.removeAttribute("redirectURL");
 				response.sendRedirect(redirectURL);
-			} else {	
-				
+			} else {
+
 				showCustomerProfile();
 			}
-			
-			
+
 		}
 	}
 
@@ -248,6 +251,26 @@ public class CustomerServices {
 		updateCustomerFieldsFromForm(customer);
 		customerDAO.update(customer);
 		showCustomerProfile();
+	}
+
+	public void newCustomer() throws ServletException, IOException {
+
+		String[] countryCodes = Locale.getISOCountries();
+
+		Map<String, String> mapCountries = new TreeMap<>();
+
+		for (String countryCode : countryCodes) {
+			Locale locale = new Locale("", countryCode);
+			String code = locale.getCountry();
+			String name = locale.getDisplayCountry();
+			mapCountries.put(name, code);
+		}
+
+		request.setAttribute("mapCountries", mapCountries);
+
+		String editPage = "customer_form.jsp";
+		RequestDispatcher dispatcher = request.getRequestDispatcher(editPage);
+		dispatcher.forward(request, response);
 	}
 
 }

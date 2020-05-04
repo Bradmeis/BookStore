@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 /**
@@ -38,9 +39,12 @@ public class Customer implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 	private int customerId;
 	private String email;
-	private String fullname;
-	private String address;
+	private String firstname;
+	private String lastname;
+	private String addressLine1;
+	private String addressLine2;
 	private String city;
+	private String province;
 	private String country;
 	private String phone;
 	private String zipcode;
@@ -52,13 +56,17 @@ public class Customer implements java.io.Serializable {
 	public Customer() {
 	}
 
-	public Customer(int customerId, String email, String fullname, String address, String city, String country,
+	public Customer(int customerId, String email, String firstname, String lastname, 
+			String addressLine1, String addressLine2, String city, String province, String country,
 			String phone, String zipcode, String password, Date registerDate) {
 		this.customerId = customerId;
 		this.email = email;
-		this.fullname = fullname;
-		this.address = address;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.addressLine1 = addressLine1;
+		this.addressLine2 = addressLine2;
 		this.city = city;
+		this.province = province;
 		this.country = country;
 		this.phone = phone;
 		this.zipcode = zipcode;
@@ -66,14 +74,18 @@ public class Customer implements java.io.Serializable {
 		this.registerDate = registerDate;
 	}
 
-	public Customer(int customerId, String email, String fullname, String address, String city, String country,
+	public Customer(int customerId, String email, String firstname, String lastname, 
+			String addressLine1, String addressLine2, String city, String province, String country,
 			String phone, String zipcode, String password, Date registerDate, Set<Review> reviews,
 			Set<BookOrder> bookOrders) {
 		this.customerId = customerId;
 		this.email = email;
-		this.fullname = fullname;
-		this.address = address;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.addressLine1 = addressLine1;
+		this.addressLine2 = addressLine2;
 		this.city = city;
+		this.province = province;
 		this.country = country;
 		this.phone = phone;
 		this.zipcode = zipcode;
@@ -103,22 +115,45 @@ public class Customer implements java.io.Serializable {
 		this.email = email;
 	}
 
-	@Column(name = "fullname", nullable = false, length = 30)
+	@Column(name = "firstname", nullable = false, length = 30)
+	public String getFirstname() {
+		return this.firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	@Transient
 	public String getFullname() {
-		return this.fullname;
+		return this.firstname + " " + this.lastname;
+	}
+	
+	@Column(name = "lastname", nullable = false, length = 30)
+	public String getLastname() {
+		return this.lastname;
 	}
 
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+	
+	@Column(name = "address_line1", nullable = false, length = 128)
+	public String getAddressLine1() {
+		return this.addressLine1;
 	}
 
-	@Column(name = "address", nullable = false, length = 128)
-	public String getAddress() {
-		return this.address;
+	public void setAddressLine1(String addressLine1) {
+		this.addressLine1 = addressLine1;
+	}
+	
+	@Column(name = "address_line2", nullable = false, length = 128)
+	public String getAddressLine2() {
+		return this.addressLine2;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setAddressLine2(String addressLine2) {
+		this.addressLine2 = addressLine2;
 	}
 
 	@Column(name = "city", nullable = false, length = 32)
@@ -130,6 +165,15 @@ public class Customer implements java.io.Serializable {
 		this.city = city;
 	}
 
+	@Column(name = "province", nullable = false, length = 45)
+	public String getProvince() {
+		return this.province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	
 	@Column(name = "country", nullable = false, length = 64)
 	public String getCountry() {
 		return this.country;
